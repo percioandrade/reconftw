@@ -1,50 +1,30 @@
-name: tests
+name: Sync Fork with Upstream
 
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
-  actions: read
-  checks: read
-  deployments: read
-  discussions: read
-  packages: read
-  repository-projects: read
-  security-events: read
-  statuses: read
-
-on: [push, pull_request]
+on:
+  schedule:
+    - cron: "0 0 * * 0"  # Todo domingo às 00:00 UTC
+  push:
+    branches:
+      - main
 
 jobs:
-  tests:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-20.04
-          - ubuntu-22.04
-          - ubuntu-latest
-
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+  sync:
+    runs-on: ubuntu-latest  # Ambiente Ubuntu
 
     steps:
-      - name: Install bash from homebrew
-        if: ${{ startsWith(matrix.os, 'macos-') }}
-        run: brew install bash
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Pega o código do seu repositório
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/six2dez/reconftw.git  # Adiciona o repositório original
 
-      - name: Install reconFTW
-        shell: bash
-        continue-on-error: true
-        run: ./install.sh
+      - name: Fetch upstream changes
+        run: git fetch upstream  # Baixa as atualizações do repositório original
 
-      - name: Check if all tools are installed
-        shell: bash
-        run: ./reconftw.sh --check-tools
+      - name: Merge upstream changes
+        run: git merge upstream/main --allow-unrelated-histories  # Mescla as alterações
 
-      - name: Check if chromium dependencies are installed
-        shell: bash
-        run: nuclei -headless -id screenshot
+      - name: Push changes to fork
+        run: git push origin main  # Envia as alterações para o seu fork
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token de autenticação
