@@ -32,4 +32,5 @@ jobs:
       - name: Push changes to fork
         run: git push origin main --force  # Força o push para o seu fork, substituindo o histórico
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token de autenticação
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token de autenticação com permissões de workflow
+          GITHUB_TOKEN_PERMISSIONS: 'write:workflows'  # Permissões de workflow para o token
