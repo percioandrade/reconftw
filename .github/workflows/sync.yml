@@ -2,29 +2,29 @@ name: Sync Fork with Upstream
 
 on:
   schedule:
-    - cron: "0 0 * * 0" # Executa todo domingo às 00:00 UTC
+    - cron: "0 0 * * 0"  # Executa todo domingo à meia-noite UTC (ajuste conforme necessário)
   push:
     branches:
-      - main  # Quando o branch principal for atualizado
+      - main  # Executa quando houver push no branch 'main'
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Usando o Ubuntu como runner
 
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Faz checkout do seu fork no GitHub
 
       - name: Add upstream remote
-        run: git remote add upstream https://github.com/six2dez/reconftw
+        run: git remote add upstream https://github.com/six2dez/reconftw.git  # Adiciona o repositório original como remoto
 
       - name: Fetch upstream changes
-        run: git fetch upstream
+        run: git fetch upstream  # Baixa as atualizações do repositório original
 
       - name: Merge upstream changes
-        run: git merge upstream/main
+        run: git merge upstream/main --allow-unrelated-histories  # Mescla as alterações do repositório original
 
       - name: Push changes to fork
-        run: git push origin main
+        run: git push origin main  # Envia as atualizações para o seu fork no GitHub
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token de autenticação
