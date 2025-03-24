@@ -27,7 +27,7 @@ jobs:
         run: git fetch upstream  # Baixa as atualizações do repositório original
 
       - name: Merge upstream changes
-        run: git merge upstream/main --allow-unrelated-histories  # Mescla as alterações do repositório original
+        run: git merge upstream/main --strategy=theirs --allow-unrelated-histories
 
       - name: Push changes to fork
         run: git push origin main  # Envia as atualizações para o seu fork no GitHub
