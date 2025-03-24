@@ -24,15 +24,12 @@ jobs:
         run: git remote add upstream https://github.com/six2dez/reconftw.git  # Adiciona o repositório original como remoto
 
       - name: Fetch upstream changes
-        run: git fetch upstream
+        run: git fetch upstream  # Baixa as atualizações do repositório original
 
       - name: Reset to upstream/main
-        run: git reset --hard upstream/main
-
-      - name: Merge upstream changes
-        run: git merge upstream/main --strategy=theirs --allow-unrelated-histories
+        run: git reset --hard upstream/main  # Reseta o fork para o estado do repositório original
 
       - name: Push changes to fork
-        run: git push origin main  # Envia as atualizações para o seu fork no GitHub
+        run: git push origin main --force  # Força o push para o seu fork, substituindo o histórico
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token de autenticação
